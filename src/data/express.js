@@ -61,6 +61,10 @@ app.post('/characters', (req, res) => {
     for (const requiredField of requiredCharacterField) {
         let isValid = false
         for (const field in req.query) {
+            if (req.query[field] == '') {
+                isValid = false
+                break
+            }
             if (field == requiredField) {
                 isValid = true
                 break
@@ -73,7 +77,7 @@ app.post('/characters', (req, res) => {
     try {
         const characters = charactersList
         for (const characterID of characters['characters']) {
-            if (characterID["id"] == req.query["id"]) return res.status(400).json("Character ID already exists")
+            if (characterID["id"] == req.query["id"]) return res.status(400).json("Character with given ID already exists")
         }
         characters['characters'].push(req.query)
         charactersList = characters
@@ -91,6 +95,9 @@ app.put('/characters/:id', (req, res) => {
             if (character["id"] == req.params["id"]) {
                 let newData = Object.keys(req.query)
                 newData.forEach(field => {
+                    if (req.query[field] == '') {
+                        return res.status(400).json("Field must be filled")
+                    }
                     if (field in character) {
                         character[field] = req.query[field]
                     }

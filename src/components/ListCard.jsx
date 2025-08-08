@@ -11,7 +11,7 @@ export default function ListCard({ character, pageReload }) {
     return (
         <div className="relative text-xl min-w-[280px] h-min-[150px] h-[180px] py-2 px-4 bg-gray-200 shadow-xl rounded-[30px] flex flex-col gap-3 justify-center hover:scale-102 transition-transform">
             <i
-                className="fa-solid fa-trash-can absolute p-2 text-red-600 top-6 right-5 rounded-lg hover:bg-red-200 transition-all duration-300"
+                className="fa-solid fa-trash-can absolute p-2 text-red-600 top-5 right-5 rounded-lg hover:bg-red-200 transition-all duration-300"
                 onClick={handleCardDelete}
             ></i>
             <p className="font-medium text-xl"><span className="text-lg font-normal">ID:</span> {character["id"]}</p>

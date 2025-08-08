@@ -8,6 +8,7 @@ export default function App() {
 
     const [charactersList, setCharactersList] = useState(null);
     const [needReload, setNeedReload] = useState(false)
+    const [isModifying, setIsModifying] = useState(false)
 
     function pageReload() {
         setNeedReload(true)
@@ -18,13 +19,14 @@ export default function App() {
             .then(res => res.json())
             .then(res => setCharactersList(res))
             .catch(rej => console.log("Failed to fetch the charachters list " + rej))
+        setIsModifying(false)
         setNeedReload(false)
     }, [needReload])
 
     if (charactersList) return (
         <div className="flex flex-row justify-evenly p-2">
-            <CardList characters={charactersList} pageReload={pageReload} />
-            <SidePanel pageReload={pageReload} setCharactersList={setCharactersList}/>
+            <CardList characters={charactersList} pageReload={pageReload} setIsModifying={setIsModifying} />
+            <SidePanel pageReload={pageReload} setCharactersList={setCharactersList} isModifying={isModifying} setIsModifying={setIsModifying}/>
         </div>
     )
 }
