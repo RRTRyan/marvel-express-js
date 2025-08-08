@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import CardList from "./components/CardList";
+import SidePanel from "./components/SidePanel";
 
 export default function App() {
 
@@ -21,8 +22,9 @@ export default function App() {
     }, [needReload])
 
     if (charactersList) return (
-        <div>
+        <div className="flex flex-row justify-evenly p-2">
             <CardList characters={charactersList} pageReload={pageReload} />
+            <SidePanel pageReload={pageReload} setCharactersList={setCharactersList}/>
         </div>
     )
 }

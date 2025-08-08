@@ -1,6 +1,7 @@
 import express from 'express'
 import { readFile } from 'fs'
 import cors from 'cors'
+import { json } from 'stream/consumers'
 const app = express()
 
 app.use(cors())
@@ -11,12 +12,12 @@ let charactersList
 function fetchCharactersList() {
     readFile('./src/data/user.json', 'utf-8', (err, data) => {
         if (err) {
-            res.status(500).json("Failed to read characters file")
+            return json("Failed to read characters file")
         }
         try {
             charactersList = JSON.parse(data)
         } catch {
-            res.status(500).json("Failed to parse data from characters file")
+            return json("Failed to parse data from characters file")
         }
     })
 }
