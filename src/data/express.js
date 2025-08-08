@@ -1,8 +1,10 @@
-const express = require('express')
-const { readFile } = require('fs')
+import express from 'express'
+import { readFile } from 'fs'
+import cors from 'cors'
 const app = express()
 
-app.listen(9000)
+app.use(cors())
+app.listen(9000, '127.0.0.1')
 
 let charactersList
 
