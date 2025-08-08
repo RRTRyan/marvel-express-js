@@ -1,6 +1,7 @@
 import { useState } from "react"
+import Notification from "./Notification"
 
-export default function ({ children, pageReload, setIsModifying }) {
+export default function ({ children, pageReload, setIsModifying, setNotificationContent }) {
 
     const SERVER_URL = "http://127.0.0.1:9000"
 
@@ -11,32 +12,41 @@ export default function ({ children, pageReload, setIsModifying }) {
 
     function handleSubmit() {
         if (children.toLowerCase() == 'create') {
-            fetch(`${SERVER_URL}/characters?id=${idValue}&name=${nameValue}&realName=${realNameValue}&universe=${universeValue}`, { method: "POST" })
+            fetch(`${SERVER_URL}/characters?id=${idValue.trim()}&name=${nameValue.trim()}&realName=${realNameValue.trim()}&universe=${universeValue.trim()}`, { method: "POST" })
+                .then((err) => (!err.ok) ? setNotificationContent(err.json()) : null)
         }
         if (children.toLowerCase() == 'modify') {
             let query = ''
             const possibleField = { "name": nameValue, "realName": realNameValue, "universe": universeValue }
             for (const field in possibleField) {
                 if (possibleField[field] != "") {
-                    query += `&${field}=${possibleField[field]}`
+                    query += `&${field}=${possibleField[field].trim()}`
                 }
             }
             fetch(`${SERVER_URL}/characters/${idValue}?${query}`, { method: "PUT" })
+                .then((err) => (!err.ok) ? setNotificationContent(err.json()) : null)
         }
         pageReload()
     }
 
+    function cancelModification() {
+        setIdValue('')
+        setNameValue('')
+        setRealNameValue('')
+        setUniverseValue('')
+    }
+
+
 
     return (
         <div className="w-full p-2 flex flex-col gap-3 items-center text-center">
-
             <div className="flex flex-row gap-3 text-xl rounded-full border-1 p-1">
                 <i
-                    class="fa-solid fa-plus p-2 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300"
+                    className="fa-solid fa-plus p-2 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300"
                     onClick={() => setIsModifying(false)}
                 ></i>
                 <i
-                    class="fa-solid fa-pencil p-2 rounded-full hover:bg-gray-300 transition-all duration-300"
+                    className="fa-solid fa-pencil p-2 rounded-full hover:bg-gray-300 transition-all duration-300"
                     onClick={() => setIsModifying(true)}
                 ></i>
             </div>
@@ -79,7 +89,7 @@ export default function ({ children, pageReload, setIsModifying }) {
                     placeholder="Please enter an universe" />
             </div>
             <div className="flex flex-row gap-2">
-                <button onClick={() => setIsModifying(false)} type="button" className="py-2 px-4 text-white font-bold rounded-lg bg-gray-500 hover:scale-103 duration-50 transition-transform">Cancel</button>
+                <button onClick={cancelModification} type="button" className="py-2 px-4 text-white font-bold rounded-lg bg-gray-500 hover:scale-103 duration-50 transition-transform">Cancel</button>
                 <button onClick={handleSubmit} type="button" className="py-2 px-4 text-white font-bold rounded-lg bg-green-600 hover:scale-103 duration-50 transition-transform">{children}</button>
             </div>
         </div>

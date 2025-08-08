@@ -2,6 +2,7 @@ import express from 'express'
 import { readFile } from 'fs'
 import cors from 'cors'
 import { json } from 'stream/consumers'
+import { type } from 'os'
 const app = express()
 
 app.use(cors())
@@ -49,7 +50,7 @@ app.get('/characters/:id', (req, res) => {
                 return res.status(200).json(character)
             }
         }
-        res.status(400).json("No such character")
+        res.status(400).json("No such character ID found")
     } catch {
         res.status(500).json("Failed to parse data from characters file")
     }
@@ -70,8 +71,10 @@ app.post('/characters', (req, res) => {
                 break
             }
         };
-        if (!isValid) return res.status(400).json("Invalid character information")
+        if (!isValid) return res.status(400).json("Missing character information")
     }
+
+    if (typeof (Number(req.query["id"])) != "number") return res.status(400).json("Invalid character ID (Must be a number)")
 
     if (!charactersList) fetchCharactersList()
     try {

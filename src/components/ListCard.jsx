@@ -1,10 +1,11 @@
-export default function ListCard({ character, pageReload }) {
+export default function ListCard({ character, pageReload, setNotificationContent }) {
 
     const currentCardCharacterID = character["id"]
     const SERVER_URL = "http://127.0.0.1:9000"
 
     function handleCardDelete() {
         fetch(`${SERVER_URL}/characters/${currentCardCharacterID}`, { method: "DELETE" })
+            .then((err) => (!err.ok) ? setNotificationContent(err.json()) : null)
         pageReload()
     }
 
